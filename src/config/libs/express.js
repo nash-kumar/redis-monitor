@@ -115,6 +115,21 @@ module.exports.successResponse = (app) => {
 };
 
 /**
+ * Error Handler with  error response
+ * @param {Object} app express app object
+ */
+module.exports.initErrorHandler = (app) => {
+  app.use((err, req, res, next) => {
+    // If the error object doesn't exists
+    if (!err && next) {
+      return next();
+    }
+    const errorResponse = error.errorResponse(err);
+    return res.status(errorResponse.status).end(JSON.stringify(errorResponse));
+  });
+};
+
+/**
  * Initialize the app with middlewares
  *
  * @param {Object} config config class with env properties & methods
@@ -128,6 +143,9 @@ module.exports.init = (config) => {
 
     // init some local variables
     this.initLocalVariables(app, config);
+
+    // init all middlewares
+    this.initMiddlewares(app, config);
 
     // init static files
     this.initStaticFiles(app);

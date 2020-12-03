@@ -6,6 +6,7 @@ module.exports.createRedis = async (host, port, password, db) => {
 
     client.on("error", (error) => {
       console.log("error in redis connection");
+      client.quit();
       reject(error);
     });
 
@@ -28,11 +29,19 @@ module.exports.ping = async (info) => {
 
 module.exports.get_info = async (info) => {
   try {
-    this.ping();
-  } catch (err) {}
+    let client = await this.createRedis(info.host, info.port, info.password);
+    let serverDetails = client.server_info;
+    return serverDetails;
+  } catch (err) {
+    return err;
+  }
 };
 
 module.exports.flush = async (info) => {
   try {
-  } catch (err) {}
+    let client = await this.createRedis(info);
+    return client.flushdb();
+  } catch (err) {
+    return err;
+  }
 };

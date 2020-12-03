@@ -23,11 +23,8 @@ exports.errorResponse = (err) => {
     // return common error response object
     return {
         success: false,
+        data: errorMessage(err),
         status: err.status ? err.status : HttpStatus.BAD_REQUEST,
         name: err.name ? err.name : 'ApiError',
-        message: errorMessage(err),
-        errors: err.errors ? err.errors : [],
-        isPublic: true,
-        info: err.info ? err.info : {},
     };
 };

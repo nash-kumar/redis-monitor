@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const { db } = require('../env');
 
-const database = new Sequelize(
+module.exports.database = new Sequelize(
     db.database, db.username, db.password, {
     host: db.host,
     dialect: db.dialect,
@@ -14,9 +14,9 @@ const database = new Sequelize(
 
 module.exports.connect = async () => {
     try {
-        await database.authenticate();
-        await database.drop();
-        await database.sync();
+        await this.database.authenticate();
+        // await this.database.drop();
+        await this.database.sync();
         return true;
     } catch (err) {
         console.log(`Database connection error: ${err}`);

@@ -1,5 +1,7 @@
-const RedisMonitorModel = require("../models/redis-monitor.model");
+const RedisMonitorModel = require("../models/redis-monitor.model").RedisSchema;
 const RedisMonitor = require("../../../config/libs/redis");
+const { md5 } = require("../../../config/libs/crypto");
+
 
 /**
  * Load redis info and append to req.
@@ -31,15 +33,14 @@ exports.load = async (req, res, next, md5) => {
  * @return {Array} List of Redis info object
  */
 
-exports.list = async (req, res) => {
+exports.list = async (req, res, next) => {
   try {
-    const info = await RedisInfo.findAll();
+    const info = await RedisMonitorModel.findAll();
     if (!info.length) {
       throw new Error("Data not found");
     }
-    req.locals = { info };
+    return res.send(info)
   } catch (e) {
-    console.log(err);
     return next(e);
   }
 };
@@ -74,7 +75,7 @@ exports.create = async (req, res, next) => {
   try {
     // check if the port and host is able to ping
     const ping = await RedisMonitor.ping(req.body);
-    if (ping.success) throw new Error("Ping Error!");
+    if (!ping.success) throw new Error("Ping Error!");
     req.body.md5 = md5(req.body.host + req.body.port.toString());
     const redisInfo = await RedisMonitorModel.create(req.body);
     return res.send(redisInfo);

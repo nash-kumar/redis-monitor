@@ -1,4 +1,10 @@
 const path = require("path");
+const envSmart = require("env-smart");
+
+/**
+ * Load the config variables from .env file
+ */
+envSmart.load();
 
 /**
  * Export environment variables
@@ -14,6 +20,6 @@ module.exports = {
     database: process.env.DB_NAME,
     host: process.env.DB_HOST || "localhost",
     dialect: "sqlite",
-    storage: path.join(process.cwd(), "data", "database.sqlite")
+    storage: path.join(process.cwd(), "data", "database.sqlite"),
   },
-}
+};
