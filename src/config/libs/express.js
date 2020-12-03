@@ -168,7 +168,6 @@ module.exports.listen = async (app, conn) => {
         console.info();
         console.info(`Environment:     ${app.env}`);
         console.info(`Server:          ${app.server}`);
-        console.info(`Database:        ${app.dburi}`);
         console.info(`App version:     ${app.version}`);
         console.info(`Started At:      ${new Date()}`);
         console.info("--");

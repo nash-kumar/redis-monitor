@@ -36,7 +36,7 @@ exports.list = async (req, res, next) => {
   try {
     const info = await RedisMonitorModel.findAll();
     if (!info.length) {
-      throw new Error([]);
+        return res.send({success: 1, data: []})
     }
     return res.send({success: 1, data: info});
   } catch (e) {
@@ -139,10 +139,10 @@ exports.flush = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    const info = await load(req.query.md5);
+    const info = await load(req.body.md5);
     if(!info) throw new Error('Not able to delete')
     await RedisMonitorModel.destroy({ where: { md5: info.md5 } });
-    return res.send("Deleted");
+    return res.send({success: 1, data: "Deleted"});
   } catch (e) {
     return next(e);
   }
