@@ -30,7 +30,7 @@ module.exports.initLocalVariables = (app, config) => {
 */
 
 module.exports.initMiddlewares = (app, config) => {
-    
+
     // parse body params and attache them to req.body
     app.use(bodyParser.json({ limit: '50mb' })); // parse application/json
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // parse application/x-www-form-urlencoded
@@ -72,7 +72,7 @@ module.exports.initRouters = (app) => {
     // module routers
     const moduleRouters = glob.sync(`${process.cwd()}/${assets.routers}`);
     // eslint-disable-next-line
-    moduleRouters.map(moduleRouter => require(moduleRouter)(router, validator, middleware));
+    moduleRouters.map(moduleRouter => require(moduleRouter)(router, validator));
 
     // mount api v1 routes
     app.use('/api/v1', router);
@@ -116,30 +116,55 @@ module.exports.successResponse = (app) => {
 
 module.exports.init = (config) => {
     try {
-      // Initialize express app & other middlewares
-      const app = express();
-  
-      // init some local variables
-      this.initLocalVariables(app, config);
-  
-      // init static files
-      this.initStaticFiles(app);
-  
-      // init models
-      this.initModels();
-  
-      // init success handler
-      this.successResponse(app);
-  
-      // init router
-      this.initRouters(app);
-  
-      // init error handler
-      this.initErrorHandler(app);
-  
-      return app;
+        // Initialize express app & other middlewares
+        const app = express();
+
+        // init some local variables
+        this.initLocalVariables(app, config);
+
+        // init static files
+        this.initStaticFiles(app);
+
+        // init models
+        this.initModels();
+
+        // init success handler
+        this.successResponse(app);
+
+        // init router
+        this.initRouters(app);
+
+        // init error handler
+        this.initErrorHandler(app);
+
+        return app;
     } catch (err) {
-      console.log(err);
-      return err;
+        console.log(err);
+        return err;
     }
-  };
+};
+
+module.exports.listen = async (app, conn) => {
+    try {
+        if (conn) {
+            const server = await app.listen(app.port, () => {
+                console.info('--');
+                console.info(app.title);
+                console.info();
+                console.info(`Environment:     ${app.env}`);
+                console.info(`Server:          ${app.server}`);
+                console.info(`Database:        ${app.dburi}`);
+                console.info(`App version:     ${app.version}`);
+                console.info(`Started At:      ${new Date()}`);
+                console.info('--');
+            });
+
+            return server;
+        }
+
+        return process.exit(1);
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+};

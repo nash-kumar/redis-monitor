@@ -1,4 +1,4 @@
-const RedisMonitorModel = require('../../../models').RedisMonitor;
+const RedisMonitorModel = require('../models/redis-monitor.model');
 const RedisMonitor = require('../../../config/libs/redis');
 
 /**
@@ -11,7 +11,7 @@ const RedisMonitor = require('../../../config/libs/redis');
  */
 exports.load = async (req, res, next, md5) => {
     try {
-        const info = await RedisInfo.findOne({ where: { md5: md5 } });
+        const info = await RedisMonitorModel.findOne({ where: { md5: md5 } });
         if (!info) {
             throw new Error('Data not found');
         }
