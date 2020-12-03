@@ -5,5 +5,5 @@ module.exports = router;
 
 router.get('/', RedisMonitorController.get);
 router.get('/:id', RedisMonitorController.getById);
-router.post('/add', RedisMonitorController.post);
+router.post('/add', RedisMonitorController.addRedis);
 router.delete('/delete', RedisMonitorController.delete);
