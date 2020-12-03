@@ -1,26 +1,25 @@
 const RedisMonitorModel = require("../models/redis-monitor.model").RedisSchema;
 const RedisMonitor = require("../../../config/libs/redis");
 const { md5 } = require("../../../config/libs/crypto");
-
+const { array } = require("joi");
 
 /**
- * Load redis info and append to req.
+ * Load redis info
  *
  * @param {Object} req request object
  * @param {Object} res response object
  * @param {Function} next next handler function
  * @return {Function} next handler
  */
-exports.load = async (req, res, next, md5) => {
+load = async (cryto) => {
   try {
-    const info = await RedisMonitorModel.findOne({ where: { md5 } });
+    const info = await RedisMonitorModel.findOne({ where: { md5: cryto } });
     if (!info) {
       throw new Error("Data not found");
     }
-    req.locals = { info };
-    return next();
+    return info;
   } catch (e) {
-    return next(e);
+    return false;
   }
 };
 
@@ -37,9 +36,9 @@ exports.list = async (req, res, next) => {
   try {
     const info = await RedisMonitorModel.findAll();
     if (!info.length) {
-      throw new Error("Data not found");
+      throw new Error([]);
     }
-    return res.send(info)
+    return res.send({success: 1, data: info});
   } catch (e) {
     return next(e);
   }
@@ -52,13 +51,13 @@ exports.list = async (req, res, next) => {
  * @param {*} next
  * @returns {JSON}
  */
-exports.get = async (req, res) => {
+exports.get = async (req, res, next) => {
   try {
-    this.load({ req, res, md5: req.query.md5 });
-    return res.send(req.locals.info);
+    const info = await load(req.query.md5);
+    if (!info) throw new Error("Data not found");
+    return res.send({success: 1, data: info});
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ msg: "Internal server error" });
+    return next(err);
   }
 };
 
@@ -77,8 +76,13 @@ exports.create = async (req, res, next) => {
     const ping = await RedisMonitor.ping(req.body);
     if (!ping.success) throw new Error("Ping Error!");
     req.body.md5 = md5(req.body.host + req.body.port.toString());
-    const redisInfo = await RedisMonitorModel.create(req.body);
-    return res.send(redisInfo);
+    let redisInfo = await load(req.body.md5);
+    if (!redisInfo) {
+      redisInfo = await RedisMonitorModel.create(req.body);
+    } else {
+      redisInfo.password = req.body.password;
+    }
+    return res.send({success: 1, data: redisInfo});
   } catch (e) {
     return next(e);
   }
@@ -94,13 +98,13 @@ exports.create = async (req, res, next) => {
  */
 exports.get_info = async (req, res, next) => {
   try {
-    this.load({ req, res, md5: req.query.md5 });
-    if (!req.locals.info) throw new Error("Data not found");
-    const { host, port, password } = req.locals.info;
+    const info = await load(req.query.md5);
+    if (!info) throw new Error("Data not found");
+    const { host, port, password } = info;
     const redisMonitor = await RedisMonitor.get_info({ host, port, password });
     if (!redisMonitor) throw new Error("Unable to fetch Redis information");
-    // return the user data
-    return res.send(redisMonitor);
+    // return the redis data
+    return res.send({success: 1, data: redisMonitor});
   } catch (e) {
     return next(e);
   }
@@ -108,13 +112,19 @@ exports.get_info = async (req, res, next) => {
 
 exports.flush = async (req, res, next) => {
   try {
-    this.load({ req, res, md5: req.query.md5 });
-    const { host, port, password } = req.locals.info;
-    const redisMonitor = await RedisMonitor.flush({ host, port, password, db: req.query.db });
-    if(!redisMonitor) throw new Error("Flush activity Error")
+    const info = await load(req.query.md5);
+    if(!info) throw new Error('Unable to Flush the infomartion')
+    const { host, port, password } = info;
+    const redisMonitor = await RedisMonitor.flush({
+      host,
+      port,
+      password,
+      db: req.query.db,
+    });
+    if (!redisMonitor) throw new Error("Flush activity Error");
     return res.send(redisMonitor);
   } catch (err) {
-      return next(e);
+    return next(e);
   }
 };
 
@@ -129,8 +139,8 @@ exports.flush = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    this.load({ req, res, md5: req.query.md5 });
-    const { info } = req.locals;
+    const info = await load(req.query.md5);
+    if(!info) throw new Error('Not able to delete')
     await RedisMonitorModel.destroy({ where: { md5: info.md5 } });
     return res.send("Deleted");
   } catch (e) {

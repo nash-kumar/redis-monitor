@@ -46,11 +46,19 @@ module.exports.initMiddlewares = (app, config) => {
  * @param {Object} app express app object
  */
 module.exports.initStaticFiles = (app) => {
-  app.use(express.static(path.join(__dirname, "app")));
+  app.use("/static", express.static(path.join(__dirname, "../../../app", "static")));
+  app.use(
+    "/static/dist",
+    express.static(path.join(__dirname, "../../../app", "static", "dist"))
+  );
+  app.use(
+    "/templates",
+    express.static(path.join(__dirname, "../../../app", "templates"))
+  );
   app.use("/favicon.ico", express.static("favicon.ico"));
   app.get("/ui", (req, res) => {
     return res.sendFile(
-      path.join(__dirname, "app", "templates", "index_page.html")
+      path.join(__dirname, "../../../app", "templates", "index_page.html")
     );
   });
 };
@@ -99,21 +107,6 @@ module.exports.initRouters = (app) => {
   });
 };
 
-module.exports.successResponse = (app) => {
-  app.use((req, res, next) => {
-    res.send = (body) => {
-      const resBody = {
-        success: true,
-        message: "SUCCESS",
-        status: res.statusCode,
-        data: body,
-      };
-      res.end(JSON.stringify(resBody));
-    };
-    return next();
-  });
-};
-
 /**
  * Error Handler with  error response
  * @param {Object} app express app object
@@ -125,7 +118,7 @@ module.exports.initErrorHandler = (app) => {
       return next();
     }
     const errorResponse = error.errorResponse(err);
-    return res.status(errorResponse.status).end(JSON.stringify(errorResponse));
+    return res.status(errorResponse.status).send(errorResponse);
   });
 };
 
@@ -152,9 +145,6 @@ module.exports.init = (config) => {
 
     // init models
     this.initModels();
-
-    // init success handler
-    this.successResponse(app);
 
     // init router
     this.initRouters(app);

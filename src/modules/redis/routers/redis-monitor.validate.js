@@ -4,7 +4,7 @@ module.exports = {
     create: {
         body: {
             port: Joi.number().required().default(6379),
-            host: Joi.string().required()
+            host: Joi.string().required().default(undefined)
         }
     },
     list: {

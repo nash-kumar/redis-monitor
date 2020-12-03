@@ -17,6 +17,7 @@ module.exports.RedisSchema = database.define(
     },
     password: {
       type: Sequelize.STRING,
+      default: undefined
     },
     add_time: {
       type: Sequelize.DATE,

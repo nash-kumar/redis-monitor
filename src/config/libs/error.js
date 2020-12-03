@@ -11,7 +11,7 @@ const errorMessage = (err) => {
     } else if (err.message) {
         ({ message } = err);
     } else {
-        message = 'Oops, Something went wrong!';
+        message = [];
     }
     return message;
 };
@@ -22,7 +22,7 @@ const errorMessage = (err) => {
 exports.errorResponse = (err) => {
     // return common error response object
     return {
-        success: false,
+        success: 0,
         data: errorMessage(err),
         status: err.status ? err.status : HttpStatus.BAD_REQUEST,
         name: err.name ? err.name : 'ApiError',
