@@ -4,18 +4,29 @@ const validate = require("./redis-monitor.validate");
 module.exports = (router, validator) => {
   router.use("/redis");
 
-  router.route("/redis").get(validator(validate.list), controller.list);
+  router
+    .route("/redis/add")
+    .post(validator(validate.create), controller.create);
 
   router
-    .route("/redis/:id")
-    .get(validator(validate.get), controller.get)
-    .put(validator(validate.update), controller.update)
-    .delete(validator(validate.delete), controller.delete);
+    .route("/redis/redis_list")
+    .get(validator(validate.list), controller.list);
 
-  /**
-   * Load user when API with userId route parameter is hit
-   */
-  router.param("userId", controller.load);
+  router
+    .route("/redis/redis_info")
+    .get(validator(validate.get), controller.get);
+
+  router.route("/redis/redis_monitor").get(controller.get_info);
+
+  //flush all
+  router
+    .route("/redis/flushall")
+    .get(controller.flush)
+    .post(controller.flush);
+
+  router
+    .route("/redis/del")
+    .post(validator(validate.delete), controller.delete);
 
   return router;
 };
