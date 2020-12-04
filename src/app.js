@@ -21,13 +21,13 @@ module.exports.start = async () => {
 };
 
 /**
- * Stop the application with express & mongoose
+ * Stop the application with express 
  */
 module.exports.stop = (server) => {
   try {
     // stop the express server instance
     server.close();
-    // disconnect mongodb with mongoose
+    // disconnect database 
     database.disconnect();
     // return
     return true;

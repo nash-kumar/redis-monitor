@@ -84,7 +84,7 @@ exports.create = async (req, res, next) => {
     }
     return res.send({success: 1, data: redisInfo});
   } catch (e) {
-    return next(e);
+    return next(e)
   }
 };
 

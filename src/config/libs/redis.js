@@ -1,4 +1,5 @@
 const redis = require("redis");
+const moment = require("moment");
 
 module.exports.createRedis = async (host, port, password) => {
   return new Promise((resolve, reject) => {
@@ -31,8 +32,12 @@ module.exports.ping = async (info) => {
 module.exports.get_info = async (info) => {
   try {
     if (info.password == null) info.password = undefined;
+    let start = moment.now();
     let client = await this.createRedis(info.host, info.port, info.password);
     let serverDetails = client.server_info;
+    let end = moment.now();
+    serverDetails["get_time"] = end - start;
+    console.log(serverDetails["get_time"]);
     return serverDetails;
   } catch (err) {
     return err;

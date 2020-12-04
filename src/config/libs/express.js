@@ -118,7 +118,7 @@ module.exports.initErrorHandler = (app) => {
       return next();
     }
     const errorResponse = error.errorResponse(err);
-    return res.status(errorResponse.status).send(errorResponse);
+    return res.json(errorResponse);
   });
 };
 
