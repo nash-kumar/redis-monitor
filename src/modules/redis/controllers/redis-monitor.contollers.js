@@ -55,8 +55,8 @@ exports.get = async (req, res, next) => {
     const info = await load(req.query.md5);
     if (!info) throw new Error("Data not found");
     return res.send({success: 1, data: info});
-  } catch (err) {
-    return next(err);
+  } catch (e) {
+    return next(e);
   }
 };
 
@@ -122,7 +122,7 @@ exports.flush = async (req, res, next) => {
     });
     if (!redisMonitor) throw new Error("Flush activity Error");
     return res.send(redisMonitor);
-  } catch (err) {
+  } catch (e) {
     return next(e);
   }
 };

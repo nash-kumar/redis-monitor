@@ -40,6 +40,31 @@ Node must be greater than v8.10.0
    npm start
    ```
 
+## Dependency
+
+To run redis connection in local
+
+## Linux
+
+1. [Link to Redis download page](https://redis.io/download)
+
+2. Download, extract and compile Redis with
+
+   ```sh
+   $ wget https://download.redis.io/releases/redis-6.0.9.tar.gz
+   $ tar xzf redis-6.0.9.tar.gz
+   $ cd redis-6.0.9
+   $ make
+   ```
+
+3. The binaries that are now compiled are available in the src directory. Run Redis with:
+
+   ```sh
+   $ src/redis-server
+   ```
+
+4. The default redis server will listen on [127.0.0.1:6379]('127.0.0.1:6379)
+
 ## Screenshots
 
 - Adding Redis Server
@@ -50,10 +75,12 @@ Node must be greater than v8.10.0
 
 ![shot_2.png](/doc/shot_2.png)
 
-- Connection Time and Commands Graph
+- Connection Time and Redis Commands per sec
 
 ![shot_3.png](/doc/shot_3.png)
+![shot_4.png](/doc/shot_4.png)
 
 - Memory and CPU usage Graph
 
-![shot_4.png](/doc/shot_4.png)
+![shot_5.png](/doc/shot_5.png)
+![shot_6.png](/doc/shot_6.png)
