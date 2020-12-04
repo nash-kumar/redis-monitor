@@ -63,7 +63,7 @@ To run redis connection in local
    $ src/redis-server
    ```
 
-4. The default redis server will listen on [127.0.0.1:6379]('127.0.0.1:6379)
+4. The default redis server will listen on [127.0.0.1:6379](127.0.0.1:6379)
 
 ## Screenshots
 
