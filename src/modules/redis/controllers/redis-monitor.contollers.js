@@ -1,7 +1,6 @@
 const RedisMonitorModel = require("../models/redis-monitor.model").RedisSchema;
 const RedisMonitor = require("../../../config/libs/redis");
 const { md5 } = require("../../../config/libs/crypto");
-const { array } = require("joi");
 
 /**
  * Load redis info

@@ -3,7 +3,7 @@ const express = require('./config/libs/express');
 const database = require('./config/libs/database');
 
 /**
- * Start the application with express & mongoose
+ * Start the application with express 
  */
 module.exports.start = async () => {
   try {
