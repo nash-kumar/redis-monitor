@@ -1,5 +1,5 @@
-const controller = require("../controllers/redis-monitor.contollers");
-const validate = require("./redis-monitor.validate");
+const controller = require("../controllers/monitor.contollers");
+const validate = require("./monitor.validate");
 
 module.exports = (router, validator) => {
     
@@ -20,8 +20,9 @@ module.exports = (router, validator) => {
 //   flush all
   router
     .route("/redis/flushall")
-    .get(validator(validate.get_info), controller.flush)
-    .post(validator(validate.get_info), controller.flush);
+    .get(controller.flush)
+    .post(controller.flush)
+
 
   router
     .route("/del")

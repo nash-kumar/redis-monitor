@@ -3,7 +3,6 @@
 ## About the project
 
 This application helps in visualizing the redis performance and monitor the data.
-
 The object of this project is to port the original redis monitor built in python/flask to node/express.
 
 Project Demo Link - https://redis-monitor-node.herokuapp.com/ui#/?_k=vzdvh7
@@ -63,7 +62,7 @@ To run redis connection in local
    $ src/redis-server
    ```
 
-4. The default redis server will listen on [127.0.0.1:6379](127.0.0.1:6379)
+4. The default redis server will listen on [127.0.0.1:6379](http://127.0.0.1:6379)
 
 ## Screenshots
 

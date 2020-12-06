@@ -50,7 +50,7 @@ module.exports.get_info = async (info) => {
   }
 };
 
-module.exports.flush = async (info) => {
+module.exports.flushall = async (info) => {
   try {
     if (info.password == null) info.password = undefined;
     let client = redis.createClient(info);

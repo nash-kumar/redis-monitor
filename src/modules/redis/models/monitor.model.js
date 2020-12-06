@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const { database } = require("../../../config/libs/database");
 
-module.exports.RedisSchema = database.define(
+const RedisSchema = database.define(
   "redis_info",
   {
     md5: {
@@ -16,7 +16,7 @@ module.exports.RedisSchema = database.define(
       default: 6379,
     },
     password: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     add_time: {
       type: Sequelize.DATE,
@@ -25,3 +25,11 @@ module.exports.RedisSchema = database.define(
   },
   { tableName: "redis_monitor" }
 );
+
+RedisSchema.prototype.toJSON = function () {
+  const data = Object.assign({}, this.get());
+  delete data.password;
+  return data;
+};
+
+module.exports = RedisSchema;

@@ -15,7 +15,6 @@ module.exports.database = new Sequelize(
 module.exports.connect = async () => {
     try {
         await this.database.authenticate();
-        // await this.database.drop();
         await this.database.sync();
         return true;
     } catch (err) {
