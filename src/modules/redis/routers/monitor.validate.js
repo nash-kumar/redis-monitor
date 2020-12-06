@@ -5,9 +5,9 @@ module.exports = {
     body: {
       port: Joi.number().required(),
       host: Joi.string().required(),
+      password: Joi.string().allow('')
     },
   },
-  list: {},
   get: {
     query: {
       md5: Joi.string().required(),
@@ -22,6 +22,7 @@ module.exports = {
   flush: {
     query: {
       md5: Joi.string().required(),
+      db: Joi.string().required(),
     },
   },
 

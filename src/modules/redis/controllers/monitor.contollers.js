@@ -1,27 +1,5 @@
 const RedisMonitorModel = require("../models/monitor.model");
 const RedisMonitor = require("../../../config/libs/redis");
-const { md5 } = require("../../../config/libs/crypto");
-const { concat } = require("joi");
-
-/**
- * Load redis info
- *
- * @param {Object} req request object
- * @param {Object} res response object
- * @param {Function} next next handler function
- * @return {Function} next handler
- */
-load = async (cryto) => {
-  try {
-    const info = await RedisMonitorModel.findOne({ where: { md5: cryto } });
-    if (!info) {
-      throw new Error("Data not found");
-    }
-    return info;
-  } catch (e) {
-    return false;
-  }
-};
 
 /**
  * Get list of redis info
@@ -80,15 +58,14 @@ exports.create = async (req, res, next) => {
     const ping = await RedisMonitor.ping(req.body);
     if (!ping.success) throw new Error("Ping Error!");
 
-    req.body.md5 = md5(req.body.host + req.body.port.toString());
+    let { host, port, password } = req.body;
+    req.body.md5 = require("crypto").createHash('md5').update(host + port.toString()).digest("hex");
 
-    let info = await RedisMonitorModel.findOne({
-      where: { md5: req.body.md5 },
-    });
+    let info = await RedisMonitorModel.findOne({ where: { md5: req.body.md5 } });
     if (!info) {
       info = await RedisMonitorModel.create(req.body);
     } else {
-      info.password = req.body.password;
+      info.password = password;
     }
 
     return res.send({ success: 1, data: info });

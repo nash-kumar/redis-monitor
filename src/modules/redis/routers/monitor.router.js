@@ -9,7 +9,7 @@ module.exports = (router, validator) => {
 
   router
     .route("/redis_list")
-    .get(validator(validate.list), controller.list);
+    .get(controller.list);
 
   router
     .route("/redis_info")
@@ -20,9 +20,7 @@ module.exports = (router, validator) => {
 //   flush all
   router
     .route("/redis/flushall")
-    .get(controller.flush)
-    .post(controller.flush)
-
+    .get(validator(validate.flush), controller.flush)
 
   router
     .route("/del")
