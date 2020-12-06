@@ -1,11 +1,10 @@
 const redis = require("redis");
-const moment = require("moment");
 
 /**
- * Create Redis Client
- * @param {*} host
- * @param {*} port
- * @param {*} password : password if any
+ * Initialize Redis Client
+ * @param {String} host
+ * @param {Number} port
+ * @param {String} auth_pass : password if any
  */
 module.exports.createRedis = async (host, port, auth_pass) => {
   return new Promise((resolve, reject) => {
@@ -25,22 +24,37 @@ module.exports.createRedis = async (host, port, auth_pass) => {
   });
 };
 
+/**
+ * Check if client is connected
+ *
+ * @param {Object} info redis redis host, port, password parameters
+ * @return {Object} success resp
+ */
 module.exports.ping = async (info) => {
   try {
     let client = await this.createRedis(info.host, info.port, info.password);
     client.info();
+    
     return { success: true };
   } catch (err) {
     return { success: false };
   }
 };
 
+/**
+ * Get Redis information
+ * @param {Object} info redis redis host, port, password parameters
+ * @return {Object} redis server details
+ */
 module.exports.get_info = async (info) => {
   try {
-    let start = moment.now();
+    let start = new Date();
+
     let client = await this.createRedis(info.host, info.port, info.password);
     let serverDetails = client.server_info;
-    let end = moment.now();
+
+    let end = new Date();
+
     serverDetails["get_time"] = end - start;
     return serverDetails;
   } catch (err) {
@@ -48,6 +62,11 @@ module.exports.get_info = async (info) => {
   }
 };
 
+/**
+ * Create Redis Client
+ * @param {Object} info redis host, port, password, db parameters
+ * @return {Object} success resp
+ */
 module.exports.flushall = async (info) => {
   try {
     let client = redis.createClient(info);
