@@ -34,7 +34,7 @@ module.exports.ping = async (info) => {
   try {
     let client = await this.createRedis(info.host, info.port, info.password);
     client.info();
-    
+
     return { success: true };
   } catch (err) {
     return { success: false };
@@ -63,7 +63,7 @@ module.exports.get_info = async (info) => {
 };
 
 /**
- * Create Redis Client
+ * Delete Redis DB Data
  * @param {Object} info redis host, port, password, db parameters
  * @return {Object} success resp
  */

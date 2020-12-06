@@ -26,6 +26,9 @@ const RedisSchema = database.define(
   { tableName: "redis_monitor" }
 );
 
+/**
+ * Remove password from response
+ */
 RedisSchema.prototype.toJSON = function () {
   const data = Object.assign({}, this.get());
   delete data.password;
