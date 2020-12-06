@@ -140,10 +140,9 @@ exports.flush = async (req, res, next) => {
     if (!info) throw new Error("Unable to Flush the infomartion");
     const { host, port, password } = info;
 
-    const redisMonitor = await RedisMonitor.flushall({ host, port, password, db });
-    if (!redisMonitor) throw new Error("Flush activity Error");
+    await RedisMonitor.flushall({ host, port, password, db });
 
-    return res.send(redisMonitor);
+    return res.send({ success: 1, data: "Deleted" });
   } catch (e) {
     return next(e);
   }

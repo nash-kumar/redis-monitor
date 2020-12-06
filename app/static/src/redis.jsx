@@ -169,7 +169,7 @@ const Redis = React.createClass({
     this.timer = null;
   },
   flush_redis: function (md5, db) {
-    `this.get(${baseUrl}/redis/flushall", { md5: md5, db: db }`;
+    this.get(`${baseUrl}/redis/flushall`, { md5, db })
   },
   componentDidMount: function () {
     this.clear();

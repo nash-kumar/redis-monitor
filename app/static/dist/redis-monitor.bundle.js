@@ -27067,7 +27067,7 @@
 	    this.timer = null;
 	  },
 	  flush_redis: function flush_redis(md5, db) {
-	    "this.get(" + _constants.baseUrl + "/redis/flushall\", { md5: md5, db: db }";
+	    this.get(_constants.baseUrl + "/redis/flushall", { md5: md5, db: db });
 	  },
 	  componentDidMount: function componentDidMount() {
 	    this.clear();
